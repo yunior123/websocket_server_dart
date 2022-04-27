@@ -11,16 +11,25 @@ main() {
   //     client.emit('fromServer', "ok 2");
   //   });
   // });
-  io.on('connection', (client) {
-    io.emit("event", "data");
-    io.send("dataw");
-    client.emit('fromServer', "ok");
+  // io.onconnection();
+
+  io.on("UPDATE_USER_POSITION", (data) {
+    print("UPDATE_USER_POSITION");
+    print(data);
+  });
+  io.on('connection', (Socket client) {
+    print('connection');
+    print(client.data);
+    io.emit("UPDATE_USER_POSITION", "data");
+    io.send("locationData");
+    client.emit('UPDATE_USER_POSITION', "ok");
     print('connection default namespace');
-    client.on('msg', (data) {
+    client.on('UPDATE_USER_POSITION', (data) {
       print('data from default => $data');
-      client.emit('fromServer', "ok");
+      client.emit('UPDATE_USER_POSITION', "ok");
     });
   });
-  io.emit("event", "data");
+
   io.listen(3000);
+  io.emit("locationData", "data");
 }
